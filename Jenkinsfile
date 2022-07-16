@@ -1,28 +1,29 @@
 pipeline {
-  agent any
   environment {
     registry = "docshishir/snake"
     registryCredential = 'training_creds'
-    app = ''
+    dockerImage = ''
   }
+  agent any
   stages {
     stage('Cloning Git') {
       steps {
-        /* Let's make sure we have the repository cloned to our workspace */
         checkout scm
       }
     }
-    stage('Build-and-Tag') {
+    stage('Building image') {
       steps {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-        app = docker.build registry
+        script {
+          dockerImage = docker.build registry
+        }
       }
     }
-    stage('Post-to-dockerhub') {
+    stage('Deploy Image') {
       steps {
-        docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-          app.push("latest")
+        script {
+          docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+            dockerImage.push()
+          }
         }
       }
     }
