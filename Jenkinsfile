@@ -1,4 +1,4 @@
-node ('master'){  
+
     def app
     stage('Cloning Git') {
         /* Let's make sure we have the repository cloned to our workspace */
@@ -36,4 +36,4 @@ node ('master'){
         build 'SECURITY-DAST-OWASP_ZAP'
         }
  
-}
+
